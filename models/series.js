@@ -17,7 +17,7 @@ const seriesSchema = new Schema ({
         required: true
     },
     category: {
-        type: String,
+        type: Array,
         required: true
     },
     toprated: {

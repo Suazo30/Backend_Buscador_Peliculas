@@ -13,7 +13,7 @@ const SeriesController = require('../controllers/SeriesController');
 
 //Endpoints
 
-router.get("/", auth, isAdmin, SeriesController.getAllSeries);
+router.get("/", SeriesController.getAllSeries);
 router.post("/", SeriesController.newSeries);
 router.post("/", auth, SeriesController.postSeriesByEpisodioSemanal);
 
