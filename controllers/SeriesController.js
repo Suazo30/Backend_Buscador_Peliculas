@@ -100,7 +100,7 @@ SeriesController.id = async (req, res) => {
     const id = req.body.id 
     try {
 
-        let result = await Series.find({id:id})
+        let result = await Series.find({_id:id})
 
         if (result.length > 0) {
             res.send(result)
@@ -120,25 +120,6 @@ SeriesController.name = async (req, res) => {
     try {
 
         let result = await Series.find({name:name})
-
-        if (result.length > 0) {
-            res.send(result)
-        } else {
-            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna serie." })
-        }
-
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-SeriesController.capituloProximo7Dias = async (req, res) => {
-
-
-    const capituloProximo7Dias = req.body.capituloProximo7Dias 
-    try {
-
-        let result = await Series.find({capituloProximo7Dias:capituloProximo7Dias})
 
         if (result.length > 0) {
             res.send(result)

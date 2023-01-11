@@ -80,14 +80,18 @@ PelisController.deletePelis = async (req, res) => {
 
 PelisController.toprated = async (req, res) => {
 
-    let toprated = req.body.toprated;
 
+    const toprated = req.body.toprated 
     try {
-        await Peli.find({toprated: toprated})
-            .then(Pelis => {
 
-                res.send(Pelis)
-            })
+        let result = await Peli.find({toprated:toprated})
+
+        if (result.length > 0) {
+            res.send(result)
+        } else {
+            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna pelicula." })
+        }
+
     } catch (error) {
         console.log(error);
     }
@@ -98,11 +102,14 @@ PelisController.id = async (req, res) => {
     let id = req.body.id;
 
     try {
-        await Peli.find({id: id})
-            .then(Pelis => {
-
-                res.send(Pelis)
-            })
+        const peliByID=await Peli.find({_id: id})
+        if(peliByID ==0){
+            res.send(404);
+            res.send({"message": "No se encontro la pelicula por ID"})
+        }else{
+            res.send  (peliByID)
+        }
+          
     } catch (error) {
         console.log(error);
     }

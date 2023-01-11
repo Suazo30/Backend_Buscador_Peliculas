@@ -13,7 +13,7 @@ const peliSchema = new Schema ({
         required: true
     },
     year: {
-        type: String,
+        type: Number,
         required: true
     },
     category: {

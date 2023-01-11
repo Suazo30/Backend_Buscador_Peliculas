@@ -176,21 +176,5 @@ UsersController.loginUser = async (req, res) => {
         res.send("Email o password incorrectos");
     }
 }
-
-UsersController.toprated = async (req, res) => {
-
-    let toprated = req.body.toprated;
-
-    try {
-        await Peli.find({toprated: toprated})
-            .then(Pelis => {
-
-                res.send(Pelis)
-            })
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 //Exporto CarsController para que pueda ser importado desde otros ficheros una vez ha ejecutado la lógica de éste(siempre igual)
 module.exports = UsersController;

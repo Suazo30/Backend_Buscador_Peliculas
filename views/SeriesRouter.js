@@ -20,7 +20,6 @@ router.post("/", auth, SeriesController.postSeriesByEpisodioSemanal);
 router.post("/toprated", SeriesController.toprated);
 router.post("/id", SeriesController.id);
 router.post("/name", SeriesController.name);
-router.post("/capituloProximo7Dias", SeriesController.capituloProximo7Dias);
 router.post("/teatrosCines", SeriesController.teatrosCines);
 
 
