@@ -99,11 +99,11 @@ PelisController.toprated = async (req, res) => {
 
 PelisController.id = async (req, res) => {
 
-    let id = req.body.id;
+    let _id = req.body._id;
 
     try {
-        const peliByID=await Peli.find({_id: id})
-        if(peliByID ==0){
+        const peliByID=await Peli.find({_id: _id})
+        if(peliByID.length ==0){
             res.send(404);
             res.send({"message": "No se encontro la pelicula por ID"})
         }else{

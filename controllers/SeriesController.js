@@ -56,6 +56,50 @@ SeriesController.newSeries = async (req, res) => {
 
 };
 
+SeriesController.updateSeries = async (req, res) => {
+
+    try {
+
+        let user = await Series.create({
+            name: req.body.name,
+            actors: req.body.actors,
+            year: req.body.year,
+            category: req.body.category,
+            toprated: req.body.toprated,
+            episodioSemanal: req.body.episodioSemanal,
+            verEnCineTeatro: req.body.verEnCineTeatro        
+        })
+
+        if (user) {
+
+            res.send({ "Message": `Su serie se ha alquilado con éxito` });
+
+        }else {
+
+            res.send({ "Message": `Ha habido un error en el alquiler` });
+
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+
+};
+
+SeriesController.deleteSeries = async (req, res) => {
+    let _id = req.body._id;
+
+    try {
+        await Series.findByIdAndDelete(_id)
+            .then(series => {
+                res.send({ "Message": `El series ${series.name} se ha eliminado con éxito` })
+            })
+    } catch (error) {
+        console.log("Error deleting series", error);
+
+    }
+};
+
 SeriesController.postSeriesByEpisodioSemanal = async (req, res) => {
 
 
@@ -97,10 +141,10 @@ SeriesController.toprated = async (req, res) => {
 SeriesController.id = async (req, res) => {
 
 
-    const id = req.body.id 
+    const _id = req.body._id 
     try {
 
-        let result = await Series.find({_id:id})
+        let result = await Series.find({_id:_id})
 
         if (result.length > 0) {
             res.send(result)

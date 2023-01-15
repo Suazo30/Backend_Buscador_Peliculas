@@ -138,6 +138,7 @@ UsersController.loginUser = async (req, res) => {
 
         let userFound = await User.find({
             email: req.body.email
+           
         })
 
         

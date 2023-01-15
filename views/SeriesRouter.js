@@ -6,8 +6,8 @@ const express = require('express');
 const router = express.Router();
 
 //Importo el middleware de auth...
-const auth = require('../middlewares/auth');
-const isAdmin = require('../middlewares/isAdmin');
+// const auth = require('../middlewares/auth');
+// const isAdmin = require('../middlewares/isAdmin');
 
 const SeriesController = require('../controllers/SeriesController');
 
@@ -15,8 +15,9 @@ const SeriesController = require('../controllers/SeriesController');
 
 router.get("/", SeriesController.getAllSeries);
 router.post("/", SeriesController.newSeries);
-router.post("/", auth, SeriesController.postSeriesByEpisodioSemanal);
-
+router.put("/", SeriesController.updateSeries);
+router.delete("/", SeriesController.deleteSeries);
+router.post("/trasmision", SeriesController.postSeriesByEpisodioSemanal);
 router.post("/toprated", SeriesController.toprated);
 router.post("/id", SeriesController.id);
 router.post("/name", SeriesController.name);
