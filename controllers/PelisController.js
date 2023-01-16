@@ -7,11 +7,14 @@ const PelisController = {};
 PelisController.getAllPelis = async (req, res) => {
 
     try {
-        await Peli.find({})
-            .then(Pelis => {
+        let result = await Peli.find({});
 
-                res.send(Pelis)
-            })
+        if (result.length > 0) {
+            res.send(result)
+        } else {
+            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna pelicula." })
+        }
+
     } catch (error) {
         console.log(error);
     }
@@ -25,55 +28,59 @@ PelisController.newPelis = async (req, res) => {
     let year = req.body.year;
     let toprated = req.body.toprated;
 
-    await Peli.create({
-        name: name,
-        actors: actors,
-        year: year,
-        category: category,
-        toprated: toprated,
+    try {
+        let result = await Peli.create({
+            name: name,
+            actors: actors,
+            category: category,
+            year: year,
+            toprated: toprated
+        })
 
-    }).then(car => {
-        res.send({ "Message": `La pelicula ${Peli.name} se ha añadido con éxito` })
-    }).catch(error => { console.log(error) });
+        if (result?.name) {
+            res.send({ "message": `La pelicula ${result.name} se ha creado con exito` })
+        }
 
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 PelisController.updatePelis = async (req, res) => {
 
-    let id = req.body.id;
+    let _id = req.body._id;
     let newName = req.body.name;
-    let newactors = req.body.actors;
-    let newyear = req.body.year;
-    let newtoprated = req.body.toprated;
 
     try {
-        await Peli.findByIdAndUpdate(id, {
+
+        let result = await Peli.findByIdAndUpdate(_id, {
             $set: {
+                _id: _id,
                 name: newName,
-                actors: newactors,
-                year: newyear,
-                category: newcategory,
-                toprated: newtoprated,
+
             }
         }).setOptions({ returnDocument: 'after' })
-            .then(pelisModified => {
-                res.send(pelisModified)
-            })
+
+        if (result?.name) {
+            res.send(result)
+        }
+
     } catch (error) {
-        console.log("Error updating pelis name", error);
+        console.log("Error al actualizar el nombre de la película", error);
     }
-}
+};
 
 PelisController.deletePelis = async (req, res) => {
     let _id = req.body._id;
 
     try {
-        await Peli.findByIdAndDelete(_id)
-            .then(peli => {
-                res.send({ "Message": `El pelis ${peli.name} se ha eliminado con éxito` })
-            })
+
+        let result = await Peli.findByIdAndDelete(_id);
+
+        res.send({ "Message": `La pelicula ${result.name} se ha eliminado con éxito` })
+
     } catch (error) {
-        console.log("Error deleting pelis", error);
+        console.log("Error al eliminar la película", error);
 
     }
 };
@@ -81,15 +88,15 @@ PelisController.deletePelis = async (req, res) => {
 PelisController.toprated = async (req, res) => {
 
 
-    const toprated = req.body.toprated 
+    const toprated = req.body.toprated
     try {
 
-        let result = await Peli.find({toprated:toprated})
+        let result = await Peli.find({ toprated: toprated })
 
         if (result.length > 0) {
             res.send(result)
         } else {
-            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna pelicula." })
+            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna pelicula con esa puntuacion." })
         }
 
     } catch (error) {
@@ -102,14 +109,14 @@ PelisController.id = async (req, res) => {
     let _id = req.body._id;
 
     try {
-        const peliByID=await Peli.find({_id: _id})
-        if(peliByID.length ==0){
+        const peliByID = await Peli.find({ _id: _id })
+        if (peliByID.length == 0) {
             res.send(404);
-            res.send({"message": "No se encontro la pelicula por ID"})
-        }else{
-            res.send  (peliByID)
+            res.send({ "message": "No se encontro la pelicula con ese ID" })
+        } else {
+            res.send(peliByID)
         }
-          
+
     } catch (error) {
         console.log(error);
     }
@@ -120,30 +127,35 @@ PelisController.name = async (req, res) => {
     let name = req.body.name;
 
     try {
-        await Peli.find({name: name})
-            .then(Pelis => {
-
-                res.send(Pelis)
-            })
+        const foundMovies = await Peli.find({
+            name: name
+        })
+        if (foundMovies.length === 0) {
+            res.send({ "message": `Lo sentimos, no se ha encontrado ninguna pelicula con este nombre ${name}` });
+        } else {
+            res.send(foundMovies)
+        }
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
-}
+};
 
 PelisController.category = async (req, res) => {
 
     let category = req.body.category;
 
     try {
-        await Peli.find({category: category})
-            .then(Pelis => {
-
-                res.send(Pelis)
-            })
+        const peliByCategory = await Peli.find({
+            category: category
+        })
+        if (peliByCategory.length === 0) {
+            res.send({ "message": `Lo sentimos, no se ha encontrado ninguna pelicula con esta categoria ${category}` });
+        } else {
+            res.send(peliByCategory)
+        }
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
-}
-
+};
 //Exporto CarsController para que pueda ser importado desde otros ficheros una vez ha ejecutado la lógica de éste(siempre igual)
 module.exports = PelisController;

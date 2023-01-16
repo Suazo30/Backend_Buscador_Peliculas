@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 
 //Importo el middleware de auth...
-const auth = require('../middlewares/auth');
+// const auth = require('../middlewares/auth');
 // const isAdmin = require('../middlewares/isAdmin');
 
 const UsersController = require('../controllers/UsersController');
@@ -16,13 +16,9 @@ const UsersController = require('../controllers/UsersController');
 
 router.get("/", UsersController.getAllUsers);
 router.post("/newuser", UsersController.newUser);
-router.put("/", UsersController.updateUser);
-router.delete("/", UsersController.deleteUser);
+router.put("/update", UsersController.updateUser);
+router.delete("/delete", UsersController.deleteUser);
 router.post("/login", UsersController.loginUser);
-
-//Endpoints with middleware...
-router.get("/profile/:_id", auth, UsersController.getUserById);
-router.post("/name", auth, UsersController.getUsersByName);
 
 
 //Exporto router para que pueda ser importado desde otros ficheros una vez ha ejecutado la lógica de éste(siempre igual)

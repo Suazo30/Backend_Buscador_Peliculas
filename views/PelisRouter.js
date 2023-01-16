@@ -13,8 +13,8 @@ const PelisController = require('../controllers/PelisController');
 
 router.get("/", PelisController.getAllPelis);
 router.post("/", PelisController.newPelis);
-router.put("/", PelisController.updatePelis);
-router.delete("/", PelisController.deletePelis);
+router.put("/update", PelisController.updatePelis);
+router.delete("/delete", PelisController.deletePelis);
 router.post("/toprated", PelisController.toprated);
 router.post("/id", PelisController.id);
 router.post("/name", PelisController.name);

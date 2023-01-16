@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 
 const authConfig = require('../config/auth');
+const { response } = require('express');
 
 const UsersController = {};
 
@@ -19,47 +20,6 @@ UsersController.getAllUsers = async (req, res) => {
         } else {
             res.send({ "Message": "Lo sentimos, no hemos encontrado ningún usuario." })
         }
-
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-UsersController.getUserById = async (req, res) => {
-
-    //Este id es el id que ha venido por parámetro en el endpoint (url)
-    let _id = req.params._id;
-    let user = req.user.usuario[0];
-
-    //Estos datos de user son lo que el middleware auth ha decodificado del token ;)
-    if (_id !== user._id) {
-
-        res.send({ "Msg": "Acceso no autorizado" });
-    } else {
-
-        res.send({
-
-            "id": user._id,
-            "name": user.name,
-            "surname": user.surname,
-            "email": user.email,
-            "phone": user.phone,
-        });
-    }
-}
-
-UsersController.getUsersByName = async (req, res) => {
-
-    let name = req.body.name;
-
-    try {
-
-        await User.find({
-            name: name
-        })
-            .then(foundUsers => {
-                res.send(foundUsers)
-            })
 
     } catch (error) {
         console.log(error);
@@ -93,41 +53,39 @@ UsersController.newUser = async (req, res) => {
 
 UsersController.updateUser = async (req, res) => {
 
+    let _id = req.body._id;
     let newName = req.body.name;
-    let newSurname = req.body.surname;
 
     try {
-        let updated = await User.findOneAndUpdate(
-            //Query de búsqueda....
-            { email: email },
-            //Campos a cambiar
-            {
-                name: newName,
-                surname: newSurname
-            }).setOptions({ returnDocument: 'after' })
-        //con setOptions en este caso voy a exigir que me devuelva el documento modificado
 
-        if (updated) {
-            res.send(`Usuario actualizado con éxito`)
+        let result = await User.findByIdAndUpdate(_id, {
+            $set: {
+                _id: _id,
+                name: newName,
+
+            }
+        }).setOptions({ returnDocument: 'after' })
+
+        if (result?.name) {
+            res.send(result)
         }
+
     } catch (error) {
-        console.log("Error updating user data", error);
+        console.log("Error al actualizar el nombre del usuario", error);
     }
-}
+};
 
 UsersController.deleteUser = async (req, res) => {
-    let dni = req.body.dni;
+    let _id = req.body._id;
 
     try {
-        let deleted = await User.findOneAndDelete({
-            dni: dni
-        })
 
-        if (deleted) {
-            res.send({ "Message": `El usuario ${erased.name} ${erased.surname} se ha eliminado con éxito` })
-        }
+        let result = await User.findByIdAndDelete(_id);
+
+        res.send({ "Message": `El usuario ${result.name} se ha eliminado con éxito` })
+
     } catch (error) {
-        console.log("Error deleting user", error);
+        console.log("Error al eliminar el usuario", error);
 
     }
 };

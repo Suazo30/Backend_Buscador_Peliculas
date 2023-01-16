@@ -28,23 +28,29 @@ SeriesController.getAllSeries = async (req, res) => {
 
 SeriesController.newSeries = async (req, res) => {
 
+    let name = req.body.name;
+    let actors = req.body.actors;
+    let year = req.body.year;
+    let toprated = req.body.toprated;
+    let episodioSemanal = req.body.episodioSemanal;
+    let verEnCineTeatro = req.body.verEnCineTeatro;
+
     try {
 
         let user = await Series.create({
-            name: req.body.name,
-            actors: req.body.actors,
-            year: req.body.year,
-            category: req.body.category,
-            toprated: req.body.toprated,
-            episodioSemanal: req.body.episodioSemanal,
-            verEnCineTeatro: req.body.verEnCineTeatro        
+            name: name,
+            actors: actors,
+            year: year,
+            toprated: toprated,
+            episodioSemanal: episodioSemanal,
+            verEnCineTeatro: verEnCineTeatro
         })
 
         if (user) {
 
             res.send({ "Message": `Su serie se ha alquilado con éxito` });
 
-        }else {
+        } else {
 
             res.send({ "Message": `Ha habido un error en el alquiler` });
 
@@ -58,44 +64,39 @@ SeriesController.newSeries = async (req, res) => {
 
 SeriesController.updateSeries = async (req, res) => {
 
+    let _id = req.body._id;
+    let newName = req.body.name;
+
     try {
 
-        let user = await Series.create({
-            name: req.body.name,
-            actors: req.body.actors,
-            year: req.body.year,
-            category: req.body.category,
-            toprated: req.body.toprated,
-            episodioSemanal: req.body.episodioSemanal,
-            verEnCineTeatro: req.body.verEnCineTeatro        
-        })
+        let result = await Series.findByIdAndUpdate(_id, {
+            $set: {
+                _id: _id,
+                name: newName,
 
-        if (user) {
+            }
 
-            res.send({ "Message": `Su serie se ha alquilado con éxito` });
+        }).setOptions({ returnDocument: 'after' })
 
-        }else {
-
-            res.send({ "Message": `Ha habido un error en el alquiler` });
-
+        if (result?.name) {
+            res.send(result)
         }
 
     } catch (error) {
-        console.log(error)
+        console.log("Error al actualizar el nombre de la serie", error);
     }
-
 };
 
 SeriesController.deleteSeries = async (req, res) => {
     let _id = req.body._id;
 
     try {
-        await Series.findByIdAndDelete(_id)
-            .then(series => {
-                res.send({ "Message": `El series ${series.name} se ha eliminado con éxito` })
-            })
+        let result = await Series.findByIdAndDelete(_id);
+
+        res.send({ "Message": `La serie ${result.name} se ha eliminado con éxito` })
+
     } catch (error) {
-        console.log("Error deleting series", error);
+        console.log("Error al eliminar la serie", error);
 
     }
 };
@@ -103,15 +104,15 @@ SeriesController.deleteSeries = async (req, res) => {
 SeriesController.postSeriesByEpisodioSemanal = async (req, res) => {
 
 
-    const episodioSemanal = req.body.episodioSemanal 
+    const episodioSemanal = req.body.episodioSemanal
     try {
 
-        let result = await Series.find({episodioSemanal:episodioSemanal})
+        let result = await Series.find({ episodioSemanal: episodioSemanal })
 
         if (result.length > 0) {
             res.send(result)
         } else {
-            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna serie." })
+            res.send({ "Message": "Lo sentimos, no hemos encontrado ningun episodio." })
         }
 
     } catch (error) {
@@ -122,15 +123,15 @@ SeriesController.postSeriesByEpisodioSemanal = async (req, res) => {
 SeriesController.toprated = async (req, res) => {
 
 
-    const toprated = req.body.toprated 
+    const toprated = req.body.toprated
     try {
 
-        let result = await Series.find({toprated:toprated})
+        let result = await Series.find({ toprated: toprated })
 
         if (result.length > 0) {
             res.send(result)
         } else {
-            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna serie." })
+            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna serie con esta puntuacion." })
         }
 
     } catch (error) {
@@ -141,10 +142,10 @@ SeriesController.toprated = async (req, res) => {
 SeriesController.id = async (req, res) => {
 
 
-    const _id = req.body._id 
+    const _id = req.body._id
     try {
 
-        let result = await Series.find({_id:_id})
+        let result = await Series.find({ _id: _id })
 
         if (result.length > 0) {
             res.send(result)
@@ -160,15 +161,15 @@ SeriesController.id = async (req, res) => {
 SeriesController.name = async (req, res) => {
 
 
-    const name = req.body.name 
+    const name = req.body.name
     try {
 
-        let result = await Series.find({name:name})
+        let result = await Series.find({ name: name })
 
         if (result.length > 0) {
             res.send(result)
         } else {
-            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna serie." })
+            res.send({ "Message": `Lo sentimos, no hemos encontrado ninguna serie con este nombre ${name}.` })
         }
 
     } catch (error) {
@@ -179,15 +180,15 @@ SeriesController.name = async (req, res) => {
 SeriesController.teatrosCines = async (req, res) => {
 
 
-    const teatrosCines = req.body.teatrosCines 
+    const teatrosCines = req.body.teatrosCines
     try {
 
-        let result = await Series.find({teatrosCines:teatrosCines})
+        let result = await Series.find({ teatrosCines: teatrosCines })
 
         if (result.length > 0) {
             res.send(result)
         } else {
-            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna serie." })
+            res.send({ "Message": "Lo sentimos, no hemos encontrado ninguna serie que se este transmitiendo en teatros o cines." })
         }
 
     } catch (error) {
