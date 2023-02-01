@@ -1,6 +1,4 @@
 
-
-
 //Importo la clase express y la guardo en la variable express (siempre igual)
 const express = require('express');
 //ejecuto el método Router() de express (siempre igual)
@@ -10,16 +8,13 @@ const router = express.Router();
 const auth = require('../middlewares/auth');
 const isAdmin = require('../middlewares/isAdmin');
 
-const UsersController = require('../controllers/UsersController');
+const RentalsController = require('../controllers/RentalsController');
 
-//Endpoints
-
-router.get("/",auth, isAdmin, UsersController.getAllUsers);
-router.post("/newuser", UsersController.newUser);
-router.put("/update", UsersController.updateUser);
-router.delete("/delete", UsersController.deleteUser);
-router.post("/login", UsersController.loginUser);
-
+// Endpoints
+router.get("/", auth, isAdmin, RentalsController.getAllRental);
+router.post("/newRental", auth, RentalsController.newRental);
+router.get("/name/", auth, RentalsController.getUserSeries);
 
 //Exporto router para que pueda ser importado desde otros ficheros una vez ha ejecutado la lógica de éste(siempre igual)
 module.exports = router;
+

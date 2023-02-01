@@ -4,6 +4,7 @@
 const express=require('express');
 //Importo métodos de express
 const app=express();
+const cors = require('cors');
 
 const dbconnect = require("./db/dbconnect");
 
@@ -14,8 +15,18 @@ const router = require('./router');
 
 //Middlewares
 //Para poder usar json
-app.use(express.json());
 
+//Configuro cors
+let corsOptions = {
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+};
+
+
+app.use(cors(corsOptions));
+app.use(express.json());
 app.use(router);
 
 //Me conecto a la base de datos

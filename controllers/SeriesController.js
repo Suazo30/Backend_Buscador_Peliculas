@@ -65,15 +65,19 @@ SeriesController.newSeries = async (req, res) => {
 SeriesController.updateSeries = async (req, res) => {
 
     let _id = req.body._id;
-    let newName = req.body.name;
+    let newOverview = req.body.overview;
+    // let newName = req.body.name;
+    // let newPoster_path = req.body.poster_path;
+    
 
     try {
 
         let result = await Series.findByIdAndUpdate(_id, {
             $set: {
                 _id: _id,
-                name: newName,
-
+                overview: newOverview,
+                // name: newName,
+                // poster_path: newPoster_path,
             }
 
         }).setOptions({ returnDocument: 'after' })
@@ -161,10 +165,10 @@ SeriesController.id = async (req, res) => {
 SeriesController.name = async (req, res) => {
 
 
-    const name = req.body.name
+    const name = req.params.name
     try {
 
-        let result = await Series.find({ name: name })
+        let result = await Series.find({ "name": {"$regex":name, "$options":"i"}})
 
         if (result.length > 0) {
             res.send(result)

@@ -32,7 +32,14 @@ const seriesSchema = new Schema ({
         type: String,
         required: true
     },
-
+    poster_path: {
+        type: String,
+        required: true
+    },
+    overview: {
+        type: String,
+        required: true
+    },
 });
 
 const Series = mongoose.model("Series", seriesSchema);
